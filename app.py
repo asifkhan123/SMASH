@@ -10,7 +10,10 @@ def live_statistics_page():
     st.sidebar.title("Navigation")
     st.sidebar.button("Home", on_click=lambda: st.session_state.update({"page": "home"}))
     st.sidebar.button("Live statistics", on_click=lambda: st.session_state.update({"page": "live_statistics"}))
-
+    st.sidebar.button("5-day summary", on_click=lambda: st.session_state.update({"page": "summary"}))
+    st.sidebar.button("Waste channels", on_click=lambda: st.session_state.update({"page": "waste_channels"}))
+    st.sidebar.button("Analytics", on_click=lambda: st.session_state.update({"page": "analytics"}))
+    st.sidebar.button("Predictions", on_click=lambda: st.session_state.update({"page": "predictions"}))
 
     # Dropdown menu to select a flight
     flight_options = ["Flight A", "Flight B", "Flight C"]  #Use database
@@ -32,6 +35,73 @@ def get_flight_data(flight):
         return 90, ["Organic", "Paper"]
     return 0, []
 
+# ---- 5-DAY SUMMARY PAGE ----
+def five_day_summary_page():
+    st.title("5-Day Summary")
+
+    # Sidebar for navigation
+    st.sidebar.title("Navigation")
+    st.sidebar.button("Home", on_click=lambda: st.session_state.update({"page": "home"}))
+    st.sidebar.button("Live statistics", on_click=lambda: st.session_state.update({"page": "live_statistics"}))
+    st.sidebar.button("5-day summary", on_click=lambda: st.session_state.update({"page": "summary"}))
+    st.sidebar.button("Waste channels", on_click=lambda: st.session_state.update({"page": "waste_channels"}))
+    st.sidebar.button("Analytics", on_click=lambda: st.session_state.update({"page": "analytics"}))
+    st.sidebar.button("Predictions", on_click=lambda: st.session_state.update({"page": "predictions"}))
+
+    # Simulate 5-day summary data
+    summary_data = {
+        "Flight A": [100, 120, 130, 110, 140],
+        "Flight B": [90, 95, 100, 110, 115],
+        "Flight C": [80, 85, 90, 95, 100],
+    }
+
+    # Display the summary for each flight
+    for flight, volumes in summary_data.items():
+        st.subheader(f"{flight} Waste Summary")
+        st.write("Daily volumes (tons):", volumes)
+        st.write("Total waste over 5 days:", sum(volumes), "tons")
+        st.write("Average daily waste:", sum(volumes) / len(volumes), "tons")
+        st.write("---")  # Separator for better readability
+
+# ---- WASTE CHANNELS PAGE ----
+def waste_channels_page():
+    st.title("Waste Channels")
+
+    # Sidebar for navigation
+    st.sidebar.title("Navigation")
+    st.sidebar.button("Home", on_click=lambda: st.session_state.update({"page": "home"}))
+    st.sidebar.button("Live statistics", on_click=lambda: st.session_state.update({"page": "live_statistics"}))
+    st.sidebar.button("5-day summary", on_click=lambda: st.session_state.update({"page": "summary"}))
+    st.sidebar.button("Waste channels", on_click=lambda: st.session_state.update({"page": "waste_channels"}))
+    st.sidebar.button("Analytics", on_click=lambda: st.session_state.update({"page": "analytics"}))
+    st.sidebar.button("Predictions", on_click=lambda: st.session_state.update({"page": "predictions"}))
+
+# ---- ANALYTICS PAGE ----
+def analytics_page():
+    st.title("Analytics")
+
+    # Sidebar for navigation
+    st.sidebar.title("Navigation")
+    st.sidebar.button("Home", on_click=lambda: st.session_state.update({"page": "home"}))
+    st.sidebar.button("Live statistics", on_click=lambda: st.session_state.update({"page": "live_statistics"}))
+    st.sidebar.button("5-day summary", on_click=lambda: st.session_state.update({"page": "summary"}))
+    st.sidebar.button("Waste channels", on_click=lambda: st.session_state.update({"page": "waste_channels"}))
+    st.sidebar.button("Analytics", on_click=lambda: st.session_state.update({"page": "analytics"}))
+    st.sidebar.button("Predictions", on_click=lambda: st.session_state.update({"page": "predictions"}))
+
+# ---- PREDICTIONS PAGE ----
+def predictions_page():
+    st.title("Predictions")
+
+    # Sidebar for navigation
+    st.sidebar.title("Navigation")
+    st.sidebar.button("Home", on_click=lambda: st.session_state.update({"page": "home"}))
+    st.sidebar.button("Live statistics", on_click=lambda: st.session_state.update({"page": "live_statistics"}))
+    st.sidebar.button("5-day summary", on_click=lambda: st.session_state.update({"page": "summary"}))
+    st.sidebar.button("Waste channels", on_click=lambda: st.session_state.update({"page": "waste_channels"}))
+    st.sidebar.button("Analytics", on_click=lambda: st.session_state.update({"page": "analytics"}))
+    st.sidebar.button("Predictions", on_click=lambda: st.session_state.update({"page": "predictions"}))
+
 # ---- MAIN FUNCTION ----
 def main():
     # Set the title of the app
@@ -46,14 +116,14 @@ def main():
         show_home_page()
     elif st.session_state.page == 'live_statistics':
         live_statistics_page()
-    elif st.session_state.page == 'page2':
-        st.write("You navigated to Page 2!")
-    elif st.session_state.page == 'page3':
-        st.write("You navigated to Page 3!")
-    elif st.session_state.page == 'page4':
-        st.write("You navigated to Page 4!")
-    elif st.session_state.page == 'page5':
-        st.write("You navigated to Page 5!")
+    elif st.session_state.page == 'summary':
+        five_day_summary_page()
+    elif st.session_state.page == 'waste_channels':
+        waste_channels_page()
+    elif st.session_state.page == 'analytics':
+        analytics_page()
+    elif st.session_state.page == 'predictions':
+        predictions_page()
 
 def show_home_page():
     st.title("Home")
@@ -65,10 +135,10 @@ def show_home_page():
     # Define the card details
     card_details = [
         {"title": "Live Statistics", "text": "View live waste statistics", "url": "live_statistics"},
-        {"title": "5-day summary", "text": "Description for Card 2", "url": "page2"},
-        {"title": "Waste channels", "text": "Description for Card 3", "url": "page3"},
-        {"title": "Analytics", "text": "Description for Card 4", "url": "page4"},
-        {"title": "Predictions", "text": "Description for Card 5", "url": "page5"},
+        {"title": "5-day summary", "text": "Description for Card 2", "url": "summary"},
+        {"title": "Waste channels", "text": "Description for Card 3", "url": "waste_channels"},
+        {"title": "Analytics", "text": "Description for Card 4", "url": "analytics"},
+        {"title": "Predictions", "text": "Description for Card 5", "url": "predictions"},
     ]
 
     # Generate cards in the grid
