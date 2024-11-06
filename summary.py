@@ -14,7 +14,7 @@ def five_day_summary_page():
     st.sidebar.button("Waste Channels", on_click=lambda: st.session_state.update({"page": "waste_channels"}))
     st.sidebar.button("Predictions", on_click=lambda: st.session_state.update({"page": "predictions"}))
 
-    # Sample data for the table
+    # Sample data for the table <--
     summary_data = {
         "Destination": ["Airport A", "Airport B", "Airport C"],
         "Recyclable (kgs)": [500, 300, 400],
@@ -36,7 +36,7 @@ def five_day_summary_page():
     st.subheader("Waste Summary Table")
     st.dataframe(df_summary, use_container_width=True, hide_index=True)
 
-    # Simulated daily waste data for line graph
+    # Sample daily waste data for line graph <--
     daily_waste_data = {
         "Day": ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5"],
         "Flight A (Recyclable)": [40, 50, 60, 55, 70],
@@ -119,7 +119,7 @@ def five_day_summary_page():
 
     st.altair_chart(bar_chart, use_container_width=True)
 
-    # Monthly CO2 emissions data
+    # Sample Monthly CO2 emissions data <-- (Just extra might not need or might change to daily)
     monthly_data = {
         'Month': [
             'January', 'February', 'March', 'April', 'May',

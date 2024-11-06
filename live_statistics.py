@@ -15,7 +15,7 @@ def live_statistics_page():
     st.sidebar.button("Waste Channels", on_click=lambda: st.session_state.update({"page": "waste_channels"}))
     st.sidebar.button("Predictions", on_click=lambda: st.session_state.update({"page": "predictions"}))
 
-    # Sample flight data
+    # Sample flight data <--
     flight_data = {
         "Flight Number": ["A1", "A2", "B1", "B2", "C1"],
         "Status": ["On Time", "Delayed", "On Time", "Cancelled", "On Time"],
@@ -33,7 +33,7 @@ def live_statistics_page():
         st.subheader("Flight Data")
         st.dataframe(df_flights)
 
-    # Simulated waste segregation data
+    # Sample waste segregation data <--
     waste_segmentation = {
         "Plastic": 40,
         "Organic": 30,
@@ -56,7 +56,7 @@ def live_statistics_page():
         st.write(f"Last Updated: {last_updated}")
 
 def get_flight_data(flight):
-    # Simulated data (replace this with actual data retrieval logic)
+    # Sample data (replace this with actual data retrieval logic) <--
     if flight == "Flight A":
         return 120, ["Plastic", "Organic"]
     elif flight == "Flight B":
