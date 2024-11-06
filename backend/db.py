@@ -1,4 +1,7 @@
 import sqlite3
+import random
+import datetime
+
 
 # Connect to SQLite database
 conn = sqlite3.connect('flight_waste.db')
@@ -36,25 +39,53 @@ CREATE TABLE IF NOT EXISTS channel (
 
 # Sample data for tables
 
-flights_data = [
-    ('AA101', '2024-11-01', 'On Time', 150.5),
-    ('BA202', '2024-11-02', 'On Time', 180.2),
-    ('CA303', '2024-11-03', 'Delayed', 200.1)
-]
 
-segregation_data = [
-    ('2024-11-01', '12:00', 'plastic', 20.5),
-    ('2024-11-01', '13:00', 'metal', 5.0),
-    ('2024-11-02', '14:00', 'paper', 15.3),
-    ('2024-11-03', '15:00', 'plastic', 22.1)
-]
+# Flights Data
+flights_data = []
+start_date = datetime.date(2024, 11, 1)
+end_date = datetime.date(2024, 11, 30)
+flight_numbers = [f"UO{i:03}" for i in range(1, 31)]  # Example flight numbers
+statuses = ["On Time", "Delayed", "Cancelled"]
 
-channel_data = [
-    ('2024-11-01', 'landfill', 120.5),
-    ('2024-11-01', 'recycling', 80.5),
-    ('2024-11-02', 'landfill', 130.2),
-    ('2024-11-02', 'SAF', 50.0)
-]
+current_date = start_date
+while current_date <= end_date:
+    flight_number = random.choice(flight_numbers)
+    status = random.choice(statuses)
+    volume = random.uniform(100, 250)  # Example volume range
+    flights_data.append((flight_number, current_date.strftime('%Y-%m-%d'), status, volume))
+    current_date += datetime.timedelta(days=1)
+
+# Segregation Data
+segregation_data = []
+start_date = datetime.date(2024, 11, 1)
+end_date = datetime.date(2024, 11, 30)
+times = [f"{hour:02}:00" for hour in range(8, 20)] # Example times (8 AM to 8 PM)
+types = ["plastic", "metal", "paper", "glass", "organic"]
+
+current_date = start_date
+while current_date <= end_date:
+    for _ in range(random.randint(1, 5)): # Random number of entries per day (1 to 5)
+        time = random.choice(times)
+        type = random.choice(types)
+        volume = random.uniform(1, 30)  # Example volume range
+        segregation_data.append((current_date.strftime('%Y-%m-%d'), time, type, volume))
+    current_date += datetime.timedelta(days=1)
+
+start_date = datetime.date(2024, 11, 1)
+end_date = datetime.date(2024, 11, 30)
+channels = ['landfill', 'recycling', 'SAF']
+channel_data = []
+current_date = start_date
+while current_date <= end_date:
+    for channel in channels:
+        if channel == 'landfill':
+            co2_emission = random.uniform(150, 180)
+        elif channel == 'recycling':
+            co2_emission = random.uniform(90, 100)
+        else:
+            co2_emission = random.uniform(80, 120)
+        channel_data.append((current_date.strftime('%Y-%m-%d'), channel, co2_emission))
+    current_date += datetime.timedelta(days=1)
 
 # Insert data into tables
 cur.executemany('''

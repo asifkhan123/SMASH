@@ -3,6 +3,8 @@ import pandas as pd
 import requests
 import json
 import sqlite3
+from prophet import Prophet
+import matplotlib.pyplot as plt
 
 # ---- PREDICTIONS PAGE ----
 def predictions_page():
@@ -92,3 +94,46 @@ def predictions_page():
             st.error("No response from our AI model. Please try again.")
     else:
         st.error(f"Error: {response.status_code}, {response.text}")
+    
+    # Forecasting Future Waste per Channel
+    st.subheader("📈 Waste Channel Forecasts")
+
+    # Connect to the database
+    conn = sqlite3.connect('flight_waste.db')
+    df_channel = pd.read_sql_query("SELECT * FROM channel", conn)
+    conn.close()
+
+    # Convert 'date' column to datetime objects
+    df_channel['date'] = pd.to_datetime(df_channel['date'])
+
+    fig, axes = plt.subplots(1, 3, figsize=(20, 5))  
+
+    for i, channel in enumerate(df_channel['channel'].unique()):
+        df_channel_specific = df_channel[df_channel['channel'] == channel].copy()
+        df_channel_specific = df_channel_specific.rename(columns={'date': 'ds', 'co2_emission': 'y'})
+
+        model = Prophet()
+        model.fit(df_channel_specific)
+        
+        future = model.make_future_dataframe(periods=14)
+        forecast = model.predict(future)
+
+        # Separate actual and forecast data
+        df_channel_specific = df_channel_specific.rename(columns={'ds': 'date'}) 
+        actual = df_channel_specific.set_index('date')
+        forecast_only = forecast[forecast['ds'] > actual.index.max()]
+
+        # Plotting
+        axes[i].plot(actual.index, actual['y'], label='Actual')
+        axes[i].plot(forecast_only['ds'], forecast_only['yhat'], 'o:', label='Forecast', linestyle='dotted') 
+        axes[i].plot([actual.index[-1], forecast_only['ds'].iloc[0]],
+                     [actual['y'].iloc[-1], forecast_only['yhat'].iloc[0]],
+                     ':', color='gray', linewidth=1)  # Dotted gray connecting line
+
+        axes[i].set_title(f"Forecast for {channel}")
+        axes[i].legend()
+
+
+
+    plt.tight_layout() 
+    st.pyplot(fig)  
