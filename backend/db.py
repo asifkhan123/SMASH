@@ -9,6 +9,7 @@ cur.execute('''
 CREATE TABLE IF NOT EXISTS flights (
     flight_number TEXT NOT NULL,
     date TEXT NOT NULL,
+    status TEXT NOT NULL,
     volume REAL NOT NULL,
     PRIMARY KEY (flight_number, date)
 )
@@ -36,9 +37,9 @@ CREATE TABLE IF NOT EXISTS channel (
 # Sample data for tables
 
 flights_data = [
-    ('AA101', '2024-11-01', 150.5),
-    ('BA202', '2024-11-02', 180.2),
-    ('CA303', '2024-11-03', 200.1)
+    ('AA101', '2024-11-01', 'On Time', 150.5),
+    ('BA202', '2024-11-02', 'On Time', 180.2),
+    ('CA303', '2024-11-03', 'Delayed', 200.1)
 ]
 
 segregation_data = [
@@ -52,13 +53,13 @@ channel_data = [
     ('2024-11-01', 'landfill', 120.5),
     ('2024-11-01', 'recycling', 80.5),
     ('2024-11-02', 'landfill', 130.2),
-    ('2024-11-02', 'recycling', 50.0)
+    ('2024-11-02', 'SAF', 50.0)
 ]
 
 # Insert data into tables
 cur.executemany('''
-INSERT INTO flights (flight_number, date, volume)
-VALUES (?, ?, ?)
+INSERT INTO flights (flight_number, date, status, volume)
+VALUES (?, ?, ?, ?)
 ''', flights_data)
 
 cur.executemany('''

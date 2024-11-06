@@ -2,6 +2,7 @@ import streamlit as st
 from graphviz import Digraph
 import pandas as pd
 import altair as alt
+import sqlite3
 
 # ---- WASTE CHANNELS PAGE ----
 def waste_channels_page():
@@ -19,22 +20,36 @@ def waste_channels_page():
     st.title("Waste Management Overview")
     st.subheader("Flow of Waste into Channels")
 
+    # Connect to SQLite database
+    conn = sqlite3.connect('flight_waste.db')
+
+    # Fetch waste channel data from the database
+    channels_query = """
+    SELECT 
+        channel, 
+        SUM(co2_emission) AS total_co2_emission
+    FROM channel
+    GROUP BY channel
+    """
+    df_channels = pd.read_sql_query(channels_query, conn)
+
+    # Calculate total waste (sum of CO2 emissions)
+    total_waste = df_channels['total_co2_emission'].sum()
+
     # Create a flowchart using Graphviz
     dot = Digraph()
     dot.attr(rankdir='TB', size='10,10')  # Top-to-bottom layout
     dot.attr('node', shape='box', style='filled', fillcolor='#f9f9f9', fontcolor='black')
     dot.attr('edge', fontsize='12')
 
-    # Define nodes with colors and styles (sample data) <--
-    dot.node('A', 'Total Waste\n(260 tonnes)', fillcolor='#4CAF50')
-    dot.node('B', 'Landfill\n(150 tonnes)', fillcolor='#FF5733')
-    dot.node('C', 'Recycling\n(80 tonnes)', fillcolor='#3498DB')
-    dot.node('D', 'Sustainable Aviation Fuel (SAF)\n(30 tonnes)', fillcolor='#F1C40F')
+    # Define nodes for each channel
+    dot.node('A', f'Total Waste\n({total_waste:.1f} tonnes)', fillcolor='#4CAF50')
+    for index, row in df_channels.iterrows():
+        dot.node(chr(66 + index), f"{row['channel'].capitalize()}\n({row['total_co2_emission']:.1f} tonnes)", fillcolor='#3498DB')
 
     # Define edges with colors
-    dot.edge('A', 'B', label='Flow to', color='#FF5733')
-    dot.edge('A', 'C', label='Flow to', color='#3498DB')
-    dot.edge('A', 'D', label='Flow to', color='#F1C40F')
+    for index in range(len(df_channels)):
+        dot.edge('A', chr(66 + index), label='Flow to', color='#3498DB')
 
     # Create columns for side-by-side layout
     col1, col2 = st.columns(2)
@@ -44,22 +59,14 @@ def waste_channels_page():
         st.subheader("Waste Flow Diagram")
         st.graphviz_chart(dot)
 
-    # Sample Waste flow data for bar chart
-    waste_data = {
-        'Channel': ['Landfill', 'Recycling', 'SAF'],
-        'Waste Amount (tonnes)': [150, 80, 30]
-    }
-
-    df_waste = pd.DataFrame(waste_data)
-
     # Bar chart to show waste flow into each channel
     with col2:
         st.subheader("Waste Flow Bar Chart")
-        bar_chart = alt.Chart(df_waste).mark_bar().encode(
-            x=alt.X('Channel', title='Management Channel'),
-            y=alt.Y('Waste Amount (tonnes)', title='Waste Amount (tonnes)'),
-            color='Channel',
-            tooltip=['Channel', 'Waste Amount (tonnes)']
+        bar_chart = alt.Chart(df_channels).mark_bar().encode(
+            x=alt.X('channel:O', title='Management Channel'),
+            y=alt.Y('total_co2_emission:Q', title='Waste Amount (tonnes)'),
+            color='channel:N',
+            tooltip=['channel:N', 'total_co2_emission:Q']
         ).properties(title='Flow of Waste into Management Channels')
 
         st.altair_chart(bar_chart, use_container_width=True)
@@ -67,17 +74,17 @@ def waste_channels_page():
     # Recycling rates and environmental impact
     st.subheader("Recycling Rates and Environmental Impact")
 
-    # Example metrics
-    total_waste = 260
-    recycled_waste = 80
-    recycling_rate = (recycled_waste / total_waste) * 100
+    # Calculate recycling metrics based on the channel data
+    recycled_waste = df_channels.loc[df_channels['channel'] == 'recycling', 'total_co2_emission'].values[0] if not df_channels[df_channels['channel'] == 'recycling'].empty else 0
+    recycling_rate = (recycled_waste / total_waste * 100) if total_waste > 0 else 0
 
-    # Estimated carbon savings (example value)
+    # Estimated carbon savings
     carbon_saved_per_tonne = 0.5  # Assume 0.5 tonnes of CO2 saved per tonne recycled
     total_carbon_saved = recycled_waste * carbon_saved_per_tonne
 
     # Display metrics
     st.metric(label="Recycling Rate", value=f"{recycling_rate:.2f}%", delta=None)
-    st.metric(label="Estimated Carbon Savings", value=f"{total_carbon_saved} tonnes CO2", delta=None)
+    st.metric(label="Estimated Carbon Savings", value=f"{total_carbon_saved:.2f} tonnes CO2", delta=None)
 
-
+    # Close the database connection
+    conn.close()

@@ -44,7 +44,7 @@ payload = {
                         "Flights Data:\n" + flights_str + "\n\n"
                         "Segregation Data:\n" + segregation_str + "\n\n"
                         "Channel Data:\n" + channel_str + "\n"
-                        "Based on this data, you must provide summary insights in the form of bullet points, and limit yourself to a maximum of 5 bullet points."
+                        "Based on this data, you must provide summary insights in the form of bullet points, and limit yourself to a maximum of 3 bullet points, one for each data category."
                     )
                 }
             ]

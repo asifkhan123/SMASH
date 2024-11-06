@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import sqlite3
 from datetime import datetime
 
 # ---- LIVE STATISTICS PAGE ----
@@ -15,35 +16,31 @@ def live_statistics_page():
     st.sidebar.button("Waste Channels", on_click=lambda: st.session_state.update({"page": "waste_channels"}))
     st.sidebar.button("Predictions", on_click=lambda: st.session_state.update({"page": "predictions"}))
 
-    # Sample flight data <--
-    flight_data = {
-        "Flight Number": ["A1", "A2", "B1", "B2", "C1"],
-        "Status": ["On Time", "Delayed", "On Time", "Cancelled", "On Time"],
-        "Total Waste (tons)": [120, 150, 90, 200, 300],
-    }
+    # Connect to SQLite database
+    conn = sqlite3.connect('flight_waste.db')
+    
+    # Fetch flight data
+    flight_query = "SELECT flight_number AS 'Flight Number', date, volume, status FROM flights"
+    df_flights = pd.read_sql_query(flight_query, conn)
 
-    # Create a DataFrame
-    df_flights = pd.DataFrame(flight_data)
+    # Rename the volume column for clarity
+    df_flights.rename(columns={'volume': 'Total Waste (tons)'}, inplace=True)
 
     # Create two columns for layout at the top of the page
-    col1, col2 = st.columns([1, 1])  # Adjust column width as needed
+    col1, col2 = st.columns([3, 2])  # Adjust column width as needed
 
     # Display the flight data table in the first column
     with col1:
         st.subheader("Flight Data")
         st.dataframe(df_flights)
 
-    # Sample waste segregation data <--
-    waste_segmentation = {
-        "Plastic": 40,
-        "Organic": 30,
-        "Metal": 20,
-        "Glass": 10,
-    }
+    # Fetch waste segregation data
+    segregation_query = "SELECT type, SUM(volume) as total_volume FROM segregation GROUP BY type"
+    df_segmentation = pd.read_sql_query(segregation_query, conn)
 
     # Create a pie chart
     fig, ax = plt.subplots(figsize=(4, 4))  # Smaller figure size for the pie chart
-    ax.pie(waste_segmentation.values(), labels=waste_segmentation.keys(), autopct='%1.1f%%', startangle=90)
+    ax.pie(df_segmentation['total_volume'], labels=df_segmentation['type'], autopct='%1.1f%%', startangle=90)
     ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
     # Display the pie chart in the second column
@@ -55,12 +52,8 @@ def live_statistics_page():
         last_updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         st.write(f"Last Updated: {last_updated}")
 
-def get_flight_data(flight):
-    # Sample data (replace this with actual data retrieval logic) <--
-    if flight == "Flight A":
-        return 120, ["Plastic", "Organic"]
-    elif flight == "Flight B":
-        return 150, ["Metal", "Glass"]
-    elif flight == "Flight C":
-        return 90, ["Organic", "Paper"]
-    return 0, []
+    # Close the database connection
+    conn.close()
+
+# Call the live_statistics_page function to render the page
+live_statistics_page()
