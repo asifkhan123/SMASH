@@ -1,15 +1,15 @@
 
-# Express Waste Handling Portal
+# Team SMASH (T0207) - Express Waste Management System
+## About our solution
+Our team developed a web-based management dashboard with AI-powered functionalities to efficiently track waste produced by flights in HKExpress.
 
-Waste management dashboard with AI-powered functionalities.
-
-
-## Run the app
+## How to start the dashboard?
+Firstly, either download or clone the repository. Then, go the project directory in your terminal and copy the following two lines.
 ```Powershell
+pip3 install -r requirements.txt
 streamlit run app.py
-ctrl-c
 ```
+Then, head over to http://localhost:8501 on your browser to view the dashboard.
 
-## Dashboard Panels
-to be added!
+
 
