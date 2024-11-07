@@ -49,10 +49,10 @@ def show_home_page():
 
     # Define the card details
     card_details = [
-        {"title": "Live Statistics", "text": "View live waste statistics", "url": "live_statistics"},
-        {"title": "5-day Summary", "text": "Description for Card 2", "url": "summary"},
-        {"title": "Waste Channels", "text": "Description for Card 3", "url": "waste_channels"},
-        {"title": "Predictions and Recommended Actions", "text": "Description for Card 4", "url": "predictions"},
+        {"title": "Live Statistics", "url": "live_statistics"},
+        {"title": "5-day Summary", "url": "summary"},
+        {"title": "Waste Channels", "url": "waste_channels"},
+        {"title": "Predictions and Recommended Actions", "url": "predictions"},
     ]
 
     data = load_images()
@@ -63,7 +63,7 @@ def show_home_page():
             with col:
                 card(
                     title=card_details[i]["title"],
-                    text=card_details[i]["text"],
+                    text="",
                     image=data[i],
                     on_click=lambda url=card_details[i]["url"]: st.session_state.update({"page": url}),
                     styles={
