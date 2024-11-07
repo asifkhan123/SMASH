@@ -5,10 +5,25 @@ import json
 import sqlite3
 from prophet import Prophet
 import matplotlib.pyplot as plt
+import base64
+
 
 # ---- PREDICTIONS PAGE ----
 def predictions_page():
-    st.title("Predictions")
+    with open("logo.jpeg", "rb") as f:
+        data = f.read()
+        encoded = base64.b64encode(data)
+    data = "data:image/png;base64," + encoded.decode("utf-8")
+    
+    # Create two columns: one for the title and one for the logo
+    col1, col2 = st.columns([7, 1])  # Adjust the ratio as needed
+
+    with col1:
+        st.title("Predictions")  # Title in the first column
+
+    with col2:
+        logo = data  # Adjust this path if necessary
+        st.image(logo, width=150)  # Display logo in the second column
 
     # Sidebar for navigation
     st.sidebar.title("Navigation")

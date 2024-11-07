@@ -3,10 +3,24 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import sqlite3
 from datetime import datetime
+import base64
 
 # ---- LIVE STATISTICS PAGE ----
 def live_statistics_page():
-    st.title("Live Statistics")
+    with open("logo.jpeg", "rb") as f:
+        data = f.read()
+        encoded = base64.b64encode(data)
+    data = "data:image/png;base64," + encoded.decode("utf-8")
+    
+    # Create two columns: one for the title and one for the logo
+    col1, col2 = st.columns([7, 1])  # Adjust the ratio as needed
+
+    with col1:
+        st.title("Live Statistics")  # Title in the first column
+
+    with col2:
+        logo = data  # Adjust this path if necessary
+        st.image(logo, width=150)  # Display logo in the second column
 
     # Sidebar for navigation
     st.sidebar.title("Navigation")

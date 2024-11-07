@@ -12,7 +12,7 @@ import base64
 # Load images and encode them
 def load_images():
     images = []
-    image_files = ["live.jpeg", "summary.jpeg", "wastechannels.jpeg", "predictions.jpeg"]
+    image_files = ["live.jpeg", "summary.jpeg", "wastechannels.jpeg", "predictions.jpeg", "logo.jpeg"]
     
     for filename in image_files:
         with open(filename, "rb") as f:
@@ -41,7 +41,20 @@ def main():
         predictions_page()
 
 def show_home_page():
-    st.title("Home")
+    with open("logo.jpeg", "rb") as f:
+        data = f.read()
+        encoded = base64.b64encode(data)
+    data = "data:image/png;base64," + encoded.decode("utf-8")
+    
+    # Create two columns: one for the title and one for the logo
+    col1, col2 = st.columns([7, 1])  # Adjust the ratio as needed
+
+    with col1:
+        st.title("Home")  # Title in the first column
+
+    with col2:
+        logo = data  # Adjust this path if necessary
+        st.image(logo, width=150)  # Display logo in the second column
 
     # Create a grid layout for the cards
     row1 = st.columns([1, 1])

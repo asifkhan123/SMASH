@@ -1,10 +1,25 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
+import base64
 
 # ---- 5-DAY SUMMARY PAGE ----
-def five_day_summary_page():
-    st.title("5-Day Summary")
+def five_day_summary_page():    
+    with open("logo.jpeg", "rb") as f:
+        data = f.read()
+        encoded = base64.b64encode(data)
+    data = "data:image/png;base64," + encoded.decode("utf-8")
+    
+    # Create two columns: one for the title and one for the logo
+    col1, col2 = st.columns([7, 1])  # Adjust the ratio as needed
+
+    with col1:
+        st.title("5-Day Summary")  # Title in the first column
+
+    with col2:
+        logo = data  # Adjust this path if necessary
+        st.image(logo, width=150)  # Display logo in the second column
+
 
     # Sidebar for navigation
     st.sidebar.title("Navigation")
