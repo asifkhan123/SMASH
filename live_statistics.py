@@ -54,6 +54,3 @@ def live_statistics_page():
 
     # Close the database connection
     conn.close()
-
-# Call the live_statistics_page function to render the page
-live_statistics_page()
