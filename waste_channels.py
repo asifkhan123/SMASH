@@ -16,7 +16,7 @@ def waste_channels_page():
     col1, col2 = st.columns([7, 1])  # Adjust the ratio as needed
 
     with col1:
-        st.title("Waste Channels")  # Title in the first column
+        st.title("Waste Management Overview")  # Title in the first column
 
     with col2:
         logo = data  # Adjust this path if necessary
@@ -26,12 +26,11 @@ def waste_channels_page():
     st.sidebar.title("Navigation")
     st.sidebar.button("Home", on_click=lambda: st.session_state.update({"page": "home"}))
     st.sidebar.button("Live Statistics", on_click=lambda: st.session_state.update({"page": "live_statistics"}))
-    st.sidebar.button("5-day Summary", on_click=lambda: st.session_state.update({"page": "summary"}))
+    st.sidebar.button("Overall Summary", on_click=lambda: st.session_state.update({"page": "summary"}))
     st.sidebar.button("Waste Channels", on_click=lambda: st.session_state.update({"page": "waste_channels"}))
     st.sidebar.button("Predictions", on_click=lambda: st.session_state.update({"page": "predictions"}))
 
     # Set the title for the app
-    st.title("Waste Management Overview")
     st.subheader("Flow of Waste into Channels")
 
     # Connect to SQLite database
@@ -70,12 +69,11 @@ def waste_channels_page():
 
     # Render the flowchart in the first column
     with col1:
-        st.subheader("Waste Flow Diagram")
+        st.markdown("<h2 style='font-size: 20px;'>Waste Flow Diagram</h2>", unsafe_allow_html=True)
         st.graphviz_chart(dot)
 
     # Bar chart to show waste flow into each channel
     with col2:
-        st.subheader("Waste Flow Bar Chart")
         bar_chart = alt.Chart(df_channels).mark_bar().encode(
             x=alt.X('channel:O', title='Management Channel'),
             y=alt.Y('total_co2_emission:Q', title='Waste Amount (tonnes)'),
@@ -86,7 +84,7 @@ def waste_channels_page():
         st.altair_chart(bar_chart, use_container_width=True)
 
     # Recycling rates and environmental impact
-    st.subheader("Recycling Rates and Environmental Impact")
+    st.subheader("Total Environmental Impact")
 
     # Calculate recycling metrics based on the channel data
     recycled_waste = df_channels.loc[df_channels['channel'] == 'recycling', 'total_co2_emission'].values[0] if not df_channels[df_channels['channel'] == 'recycling'].empty else 0

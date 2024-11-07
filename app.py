@@ -63,7 +63,7 @@ def show_home_page():
     # Define the card details
     card_details = [
         {"title": "Live Statistics", "url": "live_statistics"},
-        {"title": "5-day Summary", "url": "summary"},
+        {"title": "Overall Summary", "url": "summary"},
         {"title": "Waste Channels", "url": "waste_channels"},
         {"title": "Predictions and Recommended Actions", "url": "predictions"},
     ]

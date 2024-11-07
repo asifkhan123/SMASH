@@ -14,7 +14,7 @@ def five_day_summary_page():
     col1, col2 = st.columns([7, 1])  # Adjust the ratio as needed
 
     with col1:
-        st.title("5-Day Summary")  # Title in the first column
+        st.title("Overall Summary")  # Title in the first column
 
     with col2:
         logo = data  # Adjust this path if necessary
@@ -25,7 +25,7 @@ def five_day_summary_page():
     st.sidebar.title("Navigation")
     st.sidebar.button("Home", on_click=lambda: st.session_state.update({"page": "home"}))
     st.sidebar.button("Live Statistics", on_click=lambda: st.session_state.update({"page": "live_statistics"}))
-    st.sidebar.button("5-day Summary", on_click=lambda: st.session_state.update({"page": "summary"}))
+    st.sidebar.button("Overall Summary", on_click=lambda: st.session_state.update({"page": "summary"}))
     st.sidebar.button("Waste Channels", on_click=lambda: st.session_state.update({"page": "waste_channels"}))
     st.sidebar.button("Predictions", on_click=lambda: st.session_state.update({"page": "predictions"}))
 
