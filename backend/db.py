@@ -60,7 +60,7 @@ segregation_data = []
 start_date = datetime.date(2024, 11, 1)
 end_date = datetime.date(2024, 11, 30)
 times = [f"{hour:02}:00" for hour in range(8, 20)] # Example times (8 AM to 8 PM)
-types = ["plastic", "metal", "paper", "glass", "organic"]
+types = ["landfill, recyclable, organic compost"]
 
 current_date = start_date
 while current_date <= end_date:
